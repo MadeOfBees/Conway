@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 
 export default function Game(): JSX.Element {
-  const boardWidth = 100;
-  const boardHeight = 60;
-  const backgroundColor = "#888888"
-  const liveCellColor = "#444444"
+  const boardWidth = 175;
+  const boardHeight = 100;
+  const backgroundColor = "#999999"
+  const liveCellColor = "#333333"
   const [board, setBoard] = useState<boolean[][]>([]);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function Game(): JSX.Element {
       const newBoard: boolean[][] = await gameOfLife(board);
       setBoard(newBoard);
       await gameLoop(newBoard);
-    }, 100);
+    }, 10);
   };
 
   const gameOfLife = (board: boolean[][]): boolean[][] => {
@@ -74,7 +74,7 @@ export default function Game(): JSX.Element {
               {row.map((col, j) => (
                 <div
                   key={j}
-                  className="w-2 h-2 border border-black"
+                  className="w-2 h-2"
                   style={{ backgroundColor: col ? liveCellColor : backgroundColor }}
                 ></div>
               ))}
