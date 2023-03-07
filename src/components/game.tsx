@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 
 export default function Game(): JSX.Element {
-  const boardWidth = 175;
-  const boardHeight = 100;
+  const boardWidth = 350;
+  const boardHeight = 200;
   const backgroundColor = "#999999"
   const liveCellColor = "#333333"
   const [board, setBoard] = useState<boolean[][]>([]);
@@ -37,34 +37,52 @@ export default function Game(): JSX.Element {
       const newBoard: boolean[][] = await gameOfLife(board);
       setBoard(newBoard);
       await gameLoop(newBoard);
-    }, 10);
+    }, 4);
   };
 
-  const gameOfLife = (board: boolean[][]): boolean[][] => {
-    const newBoard: boolean[][] = [];
+  function gameOfLife(board: boolean[][]): boolean[][] {
+    const newBoard = new Array<boolean[]>(boardHeight);
     for (let i = 0; i < boardHeight; i++) {
-      newBoard.push([]);
+      newBoard[i] = new Array<boolean>(boardWidth).fill(false);
+    }
+    for (let i = 0; i < boardHeight; i++) {
       for (let j = 0; j < boardWidth; j++) {
-        let numLiveNeighbors = 0;
-        for (let k = -1; k <= 1; k++) {
-          for (let l = -1; l <= 1; l++) {
-            if (k === 0 && l === 0) continue;
-            const neighborRow = i + k;
-            const neighborCol = j + l;
-            if (neighborRow >= 0 && neighborRow < boardHeight && neighborCol >= 0 && neighborCol < boardWidth && board[neighborRow][neighborCol]) {
-              numLiveNeighbors++;
-            }
+        let liveNeighborCount = 0;
+        if (i > 0) {
+          liveNeighborCount += board[i - 1][j] ? 1 : 0;
+          if (j > 0) {
+            liveNeighborCount += board[i - 1][j - 1] ? 1 : 0;
+          }
+          if (j < boardWidth - 1) {
+            liveNeighborCount += board[i - 1][j + 1] ? 1 : 0;
           }
         }
+        if (i < boardHeight - 1) {
+          liveNeighborCount += board[i + 1][j] ? 1 : 0;
+          if (j > 0) {
+            liveNeighborCount += board[i + 1][j - 1] ? 1 : 0;
+          }
+          if (j < boardWidth - 1) {
+            liveNeighborCount += board[i + 1][j + 1] ? 1 : 0;
+          }
+        }
+        if (j > 0) {
+          liveNeighborCount += board[i][j - 1] ? 1 : 0;
+        }
+        if (j < boardWidth - 1) {
+          liveNeighborCount += board[i][j + 1] ? 1 : 0;
+        }
         if (board[i][j]) {
-          newBoard[i][j] = numLiveNeighbors === 2 || numLiveNeighbors === 3;
+          newBoard[i][j] = liveNeighborCount === 2 || liveNeighborCount === 3;
         } else {
-          newBoard[i][j] = numLiveNeighbors === 3;
+          newBoard[i][j] = liveNeighborCount === 3;
         }
       }
     }
     return newBoard;
-  };
+  }
+  
+  
 
   return (
     <div>
@@ -74,7 +92,7 @@ export default function Game(): JSX.Element {
               {row.map((col, j) => (
                 <div
                   key={j}
-                  className="w-2 h-2"
+                  className="w-1 h-1"
                   style={{ backgroundColor: col ? liveCellColor : backgroundColor }}
                 ></div>
               ))}
