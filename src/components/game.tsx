@@ -21,7 +21,7 @@ export default function Game(): JSX.Element {
   }, []);
 
   const placeRandomLiveCells = (board: boolean[][]): boolean[][] => {
-    const liveCells = Math.floor(board.length * board[0].length * 0.11);
+    const liveCells = Math.floor(board.length * board[0].length * 0.24);
     const numRows = board.length;
     const numCols = board[0].length;
     for (let i = 0; i < liveCells; i++) {
